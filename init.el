@@ -53,15 +53,6 @@
 (eval-when-compile
   (require 'use-package))
 
-;;; Minibuffer
-;; Allow nested minibuffers
-(setq enable-recursive-minibuffers t)
-
-;; Keep the cursor out of the read-only portions of the.minibuffer
-(setq minibuffer-prompt-properties
-      '(read-only t intangible t cursor-intangible t face
-                  minibuffer-prompt))
-(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 ;;; Misc
 
@@ -127,75 +118,9 @@
 
 (add-hook 'after-init-hook #'window-divider-mode)
 
-;;; Backup files
 
-;; Avoid generating backups or lockfiles to prevent creating world-readable
-;; copies of files.
-(setq create-lockfiles nil)
-(setq make-backup-files nil)
 
-(setq backup-directory-alist
-      `(("." . ,(expand-file-name "backup" user-emacs-directory))))
-(setq tramp-backup-directory-alist backup-directory-alist)
-(setq backup-by-copying-when-linked t)
-(setq backup-by-copying t)  ; Backup by copying rather renaming
-(setq delete-old-versions t)  ; Delete excess backup versions silently
-(setq version-control t)  ; Use version numbers for backup files
-(setq kept-new-versions 5)
-(setq kept-old-versions 5)
-(setq vc-make-backup-files nil)  ; Do not backup version controlled files
 
-;;; Auto save
-;; Enable auto-save to safeguard against crashes or data loss. The
-;; `recover-file' or `recover-session' functions can be used to restore
-;; auto-saved data.
-(setq auto-save-default t)
-
-;; Do not auto-disable auto-save after deleting large chunks of
-;; text. The purpose of auto-save is to provide a failsafe, and
-;; disabling it contradicts this objective.
-(setq auto-save-include-big-deletions t)
-
-(setq auto-save-list-file-prefix
-      (expand-file-name "autosave/" user-emacs-directory))
-(setq tramp-auto-save-directory
-      (expand-file-name "tramp-autosave/" user-emacs-directory))
-
-;; Auto save options
-(setq kill-buffer-delete-auto-save-files t)
-
-;;; Auto revert
-;; Auto-revert in Emacs is a feature that automatically updates the
-;; contents of a buffer to reflect changes made to the underlying file
-;; on disk.
-(setq revert-without-query (list ".")  ; Do not prompt
-      auto-revert-stop-on-user-input nil
-      auto-revert-verbose t)
-
-;; Revert other buffers (e.g, Dired)
-(setq global-auto-revert-non-file-buffers t)
-
-;;; recentf
-;; `recentf' is an Emacs package that maintains a list of recently
-;; accessed files, making it easier to reopen files you have worked on
-;; recently.
-(setq recentf-max-saved-items 300) ; default is 20
-(setq recentf-auto-cleanup 'mode)
-
-;;; saveplace
-;; `save-place-mode` enables Emacs to remember the last location within a file
-;; upon reopening. This feature is particularly beneficial for resuming work at
-;; the precise point where you previously left off.
-(setq save-place-file (expand-file-name "saveplace" user-emacs-directory))
-(setq save-place-limit 600)
-
-;;; savehist
-;; `savehist` is an Emacs feature that preserves the minibuffer history between
-;; sessions. It saves the history of inputs in the minibuffer, such as commands,
-;; search strings, and other prompts, to a file. This allows users to retain
-;; their minibuffer history across Emacs restarts.
-(setq history-length 300)
-(setq savehist-save-minibuffer-history t)  ;; Default
 
 ;;; Frames and windows
 
@@ -237,38 +162,16 @@
       mouse-wheel-scroll-amount '(1 ((shift) . hscroll))
       mouse-wheel-scroll-amount-horizontal 1)
 
-;;; Cursor
-;; The blinking cursor is distracting and interferes with cursor settings in
-;; some minor modes that try to change it buffer-locally (e.g., Treemacs).
-;; Additionally, it can cause freezing, especially on macOS, for users with
-;; customized and colored cursors.
-(blink-cursor-mode -1)
 
-;; Don't blink the paren matching the one at point, it's too distracting.
-(setq blink-matching-paren nil)
 
-;; Don't stretch the cursor to fit wide characters, it is disorienting,
-;; especially for tabs.
-(setq x-stretch-cursor nil)
-
-;;; Annoyances
-
-;; No beeping or blinking
-(setq visible-bell nil)
-(setq ring-bell-function #'ignore)
 
 ;; This controls how long Emacs will blink to show the deleted pairs with
 ;; `delete-pair'. A longer delay can be annoying as it causes a noticeable pause
 ;; after each deletion, disrupting the flow of editing.
 (setq delete-pair-blink-delay 0.1)
 
-;;; Indent and formatting
-(setq-default left-fringe-width  8)
-(setq-default right-fringe-width 8)
 
-;; Do not show an arrow at the top/bottomin the fringe and empty lines
-(setq-default indicate-buffer-boundaries nil)
-(setq-default indicate-empty-lines nil)
+
 
 ;; Continue wrapped lines at whitespace rather than breaking in the
 ;; middle of a word.
@@ -281,12 +184,6 @@
 ;; when the window is narrower than `truncate-partial-width-windows' characters.
 (setq truncate-partial-width-windows nil)
 
-;; Prefer spaces over tabs. Spaces offer a more consistent default compared to
-;; 8-space tabs. This setting can be adjusted on a per-mode basis as needed.
-(setq-default indent-tabs-mode nil
-              tab-width 4)
-
-(setq-default tab-always-indent t)
 
 ;; We often split terminals and editor windows or place them side-by-side,
 ;; making use of the additional horizontal space.
@@ -296,18 +193,11 @@
 ;; typewriter era.
 (setq sentence-end-double-space nil)
 
-;; According to the POSIX, a line is defined as "a sequence of zero or
-;; more non-newline characters followed by a terminating newline".
-(setq require-final-newline t)
 
-;; Remove duplicates from the kill ring to reduce clutter
-(setq kill-do-not-save-duplicates t)
 
-;; Ensures that empty lines within the commented region are also commented out.
-;; This prevents unintended visual gaps and maintains a consistent appearance,
-;; ensuring that comments apply uniformly to all lines, including those that are
-;; otherwise empty.
-(setq comment-empty-lines t)
+
+
+
 
 ;;; Mode line
 
@@ -315,9 +205,7 @@
 ;; average information from the mode line.
 (setq display-time-default-load-average nil)
 
-;; Display the current line and column numbers in the mode line
-(setq line-number-mode t)
-(setq column-number-mode t)
+
 
 ;;; Load post-init.el
 (minimal-emacs-load-user-init "post-init.el")
@@ -325,3 +213,6 @@
 (provide 'init)
 
 ;;; init.el ends here
+
+;; Don't blink the paren matching the one at point, it's too distracting.
+(setq blink-matching-paren nil)

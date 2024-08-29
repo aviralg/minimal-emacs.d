@@ -72,19 +72,13 @@
 ;; Prefer loading newer compiled files
 (setq load-prefer-newer t)
 
-;; Increase how much is read from processes in a single chunk (default is 4kb).
-(setq read-process-output-max (* 256 1024))  ; 256kb
+
 
 ;; Reduce rendering/line scan work by not rendering cursors or regions in
 ;; non-focused windows.
 (setq-default cursor-in-non-selected-windows nil)
 (setq highlight-nonselected-windows nil)
 
-;; Disable warnings from the legacy advice API. They aren't useful.
-(setq ad-redefinition-action 'accept)
-
-;; Ignore warnings about "existing variables being aliased".
-(setq warning-suppress-types '((defvaralias) (lexical-binding)))
 
 ;; Don't ping things that look like domain names.
 (setq ffap-machine-p-known 'reject)
@@ -227,10 +221,7 @@
 (when (bound-and-true-p tooltip-mode)
   (tooltip-mode -1))
 
-;; Disable GUIs because theyr are inconsistent across systems, desktop
-;; environments, and themes, and they don't match the look of Emacs.
-(setq use-file-dialog nil)
-(setq use-dialog-box nil)
+
 
 (unless (memq window-system '(mac ns))
   ;; (menu-bar-mode -1)
